@@ -145,6 +145,20 @@ void MX_GPIO_Init(void)
 
   GPIO_InitStruct.Pin = LED3_Pin;
   HAL_GPIO_Init(LED3_GPIO_Port, &GPIO_InitStruct);
+
+#ifdef CAN_TERM_FEATURE_ENABLED
+  FDCAN1_TERM_EN_GPIO_CLK_Enable();
+  FDCAN2_TERM_EN_GPIO_CLK_Enable();
+
+  HAL_GPIO_WritePin(FDCAN1_TERM_EN_GPIO_Port, FDCAN1_TERM_EN_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(FDCAN2_TERM_EN_GPIO_Port, FDCAN2_TERM_EN_Pin, GPIO_PIN_SET);
+
+  GPIO_InitStruct.Pin = FDCAN1_TERM_EN_Pin;
+  HAL_GPIO_Init(FDCAN1_TERM_EN_GPIO_Port, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = FDCAN2_TERM_EN_Pin;
+  HAL_GPIO_Init(FDCAN2_TERM_EN_GPIO_Port, &GPIO_InitStruct);
+#endif
 }
 
 void main_init_cb(void)
@@ -215,3 +229,26 @@ void can_identify_cb(uint32_t do_identify)
 		led_blink_stop(&hled1);
 	}
 }
+
+#ifdef CAN_TERM_FEATURE_ENABLED
+void can_set_term_cb(uint8_t channel, GPIO_PinState state)
+{
+	if (channel == 0) {
+		HAL_GPIO_WritePin(FDCAN1_TERM_EN_GPIO_Port, FDCAN1_TERM_EN_Pin, state);
+	}
+	if (channel == 1) {
+		HAL_GPIO_WritePin(FDCAN2_TERM_EN_GPIO_Port, FDCAN2_TERM_EN_Pin, state);
+	}
+}
+
+GPIO_PinState can_get_term_cb(uint8_t channel)
+{
+	if (channel == 0) {
+		return HAL_GPIO_ReadPin(FDCAN1_TERM_EN_GPIO_Port, FDCAN1_TERM_EN_Pin);
+	}
+	if (channel == 1) {
+		return HAL_GPIO_ReadPin(FDCAN2_TERM_EN_GPIO_Port, FDCAN2_TERM_EN_Pin);
+	}
+	return 0;
+}
+#endif

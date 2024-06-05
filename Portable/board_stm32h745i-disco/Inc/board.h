@@ -93,6 +93,15 @@ extern "C" {
 #define LED3_Pin			   GPIO_PIN_3
 #define LED3_GPIO_Port		   GPIOD
 
+#ifdef CAN_TERM_FEATURE_ENABLED
+#define FDCAN1_TERM_EN_GPIO_CLK_Enable __HAL_RCC_GPIOD_CLK_ENABLE
+#define FDCAN2_TERM_EN_GPIO_CLK_Enable __HAL_RCC_GPIOD_CLK_ENABLE
+#define FDCAN1_TERM_EN_GPIO_Port 	GPIOD
+#define FDCAN1_TERM_EN_Pin 			GPIO_PIN_1
+#define FDCAN2_TERM_EN_GPIO_Port 	GPIOD
+#define FDCAN2_TERM_EN_Pin 			GPIO_PIN_2
+#endif
+
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);
 
